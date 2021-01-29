@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = (api, options) => {
   // Adds vue as externals
   if (options.addExternals) {
@@ -18,16 +20,14 @@ module.exports = (api, options) => {
     });
   }
 
+  debugger
   // Build command
   let buildCommand = 'vue-cli-service build';
 
   if (options.buildAsLib || options.mode === 'awesome') {
-    buildCommand += ' --target lib ';
-    buildCommand += options.main ? options.main : 'src/main.ts';
-  }
-
-  if (options.bundleAfterBuild || options.mode === 'awesome') {
-    buildCommand += ' && npm run bundleDts';
+    buildCommand += ' --target lib';
+    buildCommand += ` --name ${options.name}`;
+    buildCommand += options.main ? options.main : ' src/main.ts';
   }
 
   // Bundle command
@@ -35,14 +35,14 @@ module.exports = (api, options) => {
   if (options.name) {
     bundleDtsCommand += ` --name ${options.name}`;
   }
-  if (options.baseDir) {
-    bundleDtsCommand += ` --baseDir ${options.baseDir}`;
-  }
   if (options.main) {
     bundleDtsCommand += ` --main ${options.main}`;
   }
   if (options.removeSource) {
     bundleDtsCommand += ' --removeSource';
+  }
+  if (options.createIndex) {
+    bundleDtsCommand += ' --createIndex';
   }
 
   // Extend package.json
@@ -50,6 +50,7 @@ module.exports = (api, options) => {
     scripts: {
       'build': buildCommand,
       'bundleDts': bundleDtsCommand,
-    }
+    },
+    typings: path.join(options.outputPath, options.name + '.d.ts')
   });
 }

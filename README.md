@@ -14,21 +14,31 @@ The plugin is basically a wrapper of [dts-bundle](https://github.com/TypeStrong/
 
 And additionally:
 
-- generate the minimum configuration to build TypeScript library
-- removes all conflicts with dts generating
+- Generate the minimum configuration to build TypeScript library
+- Remove all conflicts with dts generating
+- Add a `typings` entry in the `package.json`
+- Optionally copy the global `.d.ts` to the root as `index.d.ts` to ensure maximum compatibility
 
 ## Getting Started
 
 ### A new project
 
-If yon don't have a project, you can create it using the preset:
+If yon don't have a project, create one using `vue create <projectName>`. Choose "Manually select features". Select at least :
 
-```sh
-vue create --preset vatson/vue-ts-lib my-vue-lib
+```
+ ◯ Choose Vue version
+ ◉ Babel
+ ◉ TypeScript
+ ◯ Progressive Web App (PWA) Support
+ ◯ Router
+ ◯ Vuex
+ ◯ CSS Pre-processors
+ ◯ Linter / Formatter
+ ◯ Unit Testing
+ ◯ E2E Testing
 ```
 
-_More information you can find here https://github.com/vatson/vue-ts-lib_
-
+This plugin works with Vue 3, but has not been tested with Vue 2.
 
 ### Adding to an existing project
 
@@ -36,33 +46,29 @@ Install the plugin into your project:
 
 ```sh
 cd my-vue-app
-vue add ts-bundler
+vue add @hl037/ts-bundler
 ```
 
-Now you can run `build` or use CLI commands listed below. 
+The default options should give a working configuration, but you still can adjust it.
+
 
 
 ## CLI Commands
 
-The plugin adds one command `bundle-dts` to bundle the declaration files generated during build process.
+The plugin adds a `build` command to build the library and generate the declaration for each source, and a `bundle-dts` command to bundle in one file the declaration files generated during build process. If the default option are not modified, then it will also generate an `index.d.ts` at the project root. This is beacuase some typescript build tools won't look at the `typings` entry in the project.json.
+
 
 ```sh
-npx vue-cli-service bundle-dts [options]
+npm/yarn build
+npm/yarn bundleDts
 ```
-
-or already configured npm command 
-
-```sh
-npm run bundleDts
-```
-
 
 All supported options you can find here [https://github.com/TypeStrong/dts-bundle](https://github.com/TypeStrong/dts-bundle#options)
 
 
 ## Example of use
 
-- [https://github.com/vatson/vue-anchored-menu](https://github.com/vatson/vue-anchored-menu)
+- [https://github.com/hl037/vue-contenteditable](https://github.com/hl037/vue-contenteditable)
 
 _Feel free to create an issue if you want to add your project to the list and help others solve their problems on good examples_
 
@@ -74,17 +80,13 @@ In order for everything to work correctly, there was a need to disable some webp
 - `thread-loader` - doesn't allow to write dts files on filesystem;
 - `cache-loader` - incorrectly caches __compilerOptions__ passed to `ts-loader`
 
-
-## Potentially useful
-
-- [https://github.com/vatson/vue-cli-plugin-ts-paths](https://github.com/vatson/vue-cli-plugin-ts-paths) helps to avoid duplication of configurations for your path aliases
-
-
-## TODO
-
-- Add an ability to replace default HelloWorld with a base component;
-
-
 ## License 
 
 MIT
+
+## Authors
+
+Based on a work of Vadim Tiukov 
+
+Patched and reworked by Léo Flaventin Hauchecorne 
+

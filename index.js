@@ -1,5 +1,6 @@
 const dts = require('dts-bundle');
 const path = require('path');
+const fs = require('fs');
 
 module.exports = (api, options) => {
 
@@ -31,23 +32,29 @@ module.exports = (api, options) => {
     usage: 'vue-cli-service bundle-dts [options]',
   }, async (args) => {
     const config = api.resolveWebpackConfig();
-
+    
     const baseDir = config.output.path;
     const entry = path.parse(config.entry.app[0]);
-    const main = path.resolve(baseDir, entry.dir, entry.name + '.d.ts');
-    const name = require(api.resolve('package.json')).name;
+    const main = path.resolve(entry.dir, entry.name + '.d.ts');
+    const name = args.name ? args.name : require(api.resolve('package.json')).name;
 
     delete args['_'];
 
-    if (args.main) {
+    if(args.main) {
       const main = path.parse(args.main);
-      args.main = path.resolve(baseDir, main.dir, main.name + '.d.ts');
+      args.main = path.resolve(main.dir, main.name + '.d.ts');
     }
-
     dts.bundle({
       ...{ baseDir, main, name },
       ...args
     });
+    
+    if(args.createIndex) {
+      fs.copyFileSync(
+        path.resolve(baseDir, name + ".d.ts"),
+        "index.d.ts"
+      )
+    }
 
   });
 }
