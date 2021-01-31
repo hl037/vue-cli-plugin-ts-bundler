@@ -51,6 +51,8 @@ vue add @hl037/ts-bundler
 
 The default options should give a working configuration, but you still can adjust it.
 
+**IMPORTANT : Due to a bug, you need to manually edit the package.json so that `@hl037/vue-cli-plugin-ts-bundler` is last in the `devDependencies` list** 
+
 
 
 ## CLI Commands
